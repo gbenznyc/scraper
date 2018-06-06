@@ -23,6 +23,10 @@ def CSVReader(path):
 		dict_list.append(row)
 	return dict_list
 
+def removeDuplicates(dict_list):
+	clean_list = list(set(dict_list))
+	print(clean_list)
+	
 def main():
 	CSVDict = CSVReader('heads.csv')
 	print(len(CSVDict))
