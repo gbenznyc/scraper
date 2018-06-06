@@ -137,23 +137,61 @@ def splitNameFinder(dict_list):
       splitName1=name[0:i+1]
       splitName2=name[i+1:len(name)]
       # print(splitName1, " ", splitName2)
-      testName = ""
       for i in range(len(wordsInName)):
         if(splitName1==wordsInName[i]):
-          if checkValidName(splitName1)==True:
-            sideName = getSideName(wordsInName, splitName1, splitName2)
-            if len(sideName)>0:
-               if checkValidName(sideName)==True:
-                 nameCountNumber = nameCountNumber+1
-                #  print(splitName1, " ", sideName, " ", dicts['email'])
+          sideName = getSideName(wordsInName, wordsInName[i], splitName2)
+          if len(sideName)>0:
+            if checkValidName(wordsInName[i])==True:
+              if checkValidName(sideName)==True:
+                nameCountNumber = nameCountNumber+1
+                print(wordsInName[i], " ", sideName, " ", dicts['email'])
         if(splitName2==wordsInName[i]):
-          if checkValidName(splitName2)==True:
-            sideName = getSideName(wordsInName, splitName2, splitName1)
-            if len(sideName)>0:
-               if checkValidName(sideName)==True:
-                 nameCountNumber = nameCountNumber+1
-                #  print(splitName2, " ", sideName, " ", dicts['email'])
+          sideName = getSideName(wordsInName, wordsInName[i], splitName1)
+          if len(sideName)>0:
+            if checkValidName(wordsInName[i])==True:
+              if checkValidName(sideName)==True:
+                nameCountNumber = nameCountNumber+1
+                print(wordsInName[i], " ", sideName, " ", dicts['email'])
 # startswith for main name
+  return nameCountNumber
+
+
+def splitNameFinderStartsWith(dict_list):
+  nameCountNumber=0
+  clean_list = []
+  # splitChar = "."
+  for dicts in dict_list:
+    #print(dicts)
+    name = dicts['email'].split("@")[0]
+    name=name.translate(str.maketrans(dict.fromkeys('0123456789.-_+,')))#removes all numbers
+    name=name.lower()
+
+
+
+    wordsInName = dicts['info'].lower().split()
+
+    for i in range(len(name)):
+      splitName1=name[0:i+1]
+      splitName2=name[i+1:len(name)]
+      # print(splitName1, " ", splitName2)
+      for i in range(len(wordsInName)):
+        if(wordsInName[i].startswith(splitName1)):
+          sideName = getSideName(wordsInName, wordsInName[i], splitName2)
+          if len(sideName)>0:
+            if checkValidName(wordsInName[i])==True:
+              if checkValidName(sideName)==True:
+                nameCountNumber = nameCountNumber+1
+                print(wordsInName[i], " ", sideName, " ", dicts['email'])
+        if(wordsInName[i].startswith(splitName2)):
+          sideName = getSideName(wordsInName, wordsInName[i], splitName1)
+          if len(sideName)>0:
+            if checkValidName(wordsInName[i])==True:
+              if checkValidName(sideName)==True:
+                nameCountNumber = nameCountNumber+1
+                print(wordsInName[i], " ", sideName, " ", dicts['email'])
+# startswith for main name
+# single names dont work
+# if email is in info it dupilcates
   return nameCountNumber
     
     
@@ -171,7 +209,7 @@ def checkValidName(theName):
 
 def getSideName(wordsInName,  name, sideName):
   for j in range(len(wordsInName)):
-    if name == wordsInName[j]:
+    if wordsInName[j].startswith(name):
           if j>=1:
             if wordsInName[j-1].startswith(sideName):
               return wordsInName[j-1]
@@ -213,7 +251,9 @@ def main():
 	# 			validName = True
 	# 	if validName == True:
 	# 		print(namesWithEmails[i])
-	print(splitNameFinder(CSVDict))
+	# print(splitNameFinder(CSVDict))
+	print(splitNameFinderStartsWith(CSVDict))
+
 	
 
 
@@ -221,8 +261,8 @@ array = []
 with open("names.txt", "r") as ins:
   for line in ins:
     array.append(line.lower())
-for i in range(len(array)):
-  array[i] = array[i].strip('\n')
+for l in range(len(array)):
+  array[l] = array[l].strip('\n')
 
 main()
 
