@@ -37,6 +37,85 @@ def removeDuplicates(dict_list):
 				break
 	return clean_list
 
+
+
+
+
+
+
+
+
+	def nameInEmailWithSplitChar(dict_list, splitChar):
+  clean_list = []
+  # splitChar = "."
+  for dicts in dict_list:
+		#print(dicts)
+    if dicts['email'].split("@")[0].find(splitChar) > -1:
+      # name = dicts['email'].split("@")[0].lower().split(splitChar)
+      # wordsInName = re.findall(r"[\w']+", dicts['info'].lower())
+
+      name = dicts['email'].split("@")[0]
+      name=name.translate(str.maketrans(dict.fromkeys(',')))
+      name=name.lower()
+      name=name.split(splitChar)
+      wordsInName = dicts['info'].lower().split()
+      
+      nameCount = 0;
+      for i in range(len(name)):   
+        for j in range(len(wordsInName)):
+          if name[i] == wordsInName[j]:
+            nameCount = nameCount+1
+            j =len(wordsInName)+10
+      if nameCount >= len(name):
+        clean_list.append(dicts)
+        print(name, " ", dicts['email'])
+  return clean_list
+
+
+def nameInEmailSingleCharAndName(dict_list):
+  clean_list = []
+  # splitChar = "."
+  for dicts in dict_list:
+    #print(dicts)
+    name = dicts['email'].split("@")[0]
+    name=name.translate(str.maketrans(dict.fromkeys('0123456789.-_+,')))#removes all numbers
+    name=name.lower()
+    lastLetter=name[len(name)-1]
+    firstLetter=name[0]
+    nameFirst=name[0:len(name)-1]
+    nameLast=name[1:len(name)]
+    
+    # wordsInName = re.findall(r"[\w']+", dicts['info'].lower())
+    wordsInName = dicts['info'].lower().split()
+
+
+    for j in range(len(wordsInName)):
+      if nameLast == wordsInName[j]:
+        if j>=1:
+          if firstLetter == wordsInName[j-1][0]:
+            print(nameLast, " ", wordsInName[j-1], " ", dicts['email'], dicts['info'])
+        if j<len(wordsInName)-1:
+          if firstLetter == wordsInName[j+1][0]:
+            print(nameLast, " ", wordsInName[j+1], " ", dicts['email'], dicts['info'])
+
+      if nameFirst == wordsInName[j]:
+        if j>=1:
+          if lastLetter == wordsInName[j-1][0]:
+            print(nameFirst, " ", wordsInName[j-1], " ", dicts['email'], dicts['info'])
+        if j<len(wordsInName)-1:
+          if lastLetter == wordsInName[j+1][0]:
+            print(nameFirst, " ", wordsInName[j+1], " ", dicts['email'], dicts['info'])
+  return clean_list
+
+
+
+
+
+
+
+
+  
+
 	
 def main():
 	CSVDict = CSVReader('heads.csv')
