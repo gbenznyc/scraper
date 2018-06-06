@@ -1,5 +1,7 @@
 import csv
 
+namesWithEmails = []
+
 def noEmails(dict_list):
 	clean_list = []
 	for dicts in dict_list:
@@ -44,8 +46,7 @@ def removeDuplicates(dict_list):
 
 
 
-
-	def nameInEmailWithSplitChar(dict_list, splitChar):
+def nameInEmailWithSplitChar(dict_list, splitChar):
   clean_list = []
   # splitChar = "."
   for dicts in dict_list:
@@ -69,6 +70,7 @@ def removeDuplicates(dict_list):
       if nameCount >= len(name):
         clean_list.append(dicts)
         print(name, " ", dicts['email'])
+        namesWithEmails.append(name)
   return clean_list
 
 
@@ -93,18 +95,26 @@ def nameInEmailSingleCharAndName(dict_list):
       if nameLast == wordsInName[j]:
         if j>=1:
           if firstLetter == wordsInName[j-1][0]:
-            print(nameLast, " ", wordsInName[j-1], " ", dicts['email'], dicts['info'])
+            # print(nameLast, " ", wordsInName[j-1], " ", dicts['email'], dicts['info'])
+            namesWithEmails.append(nameLast.lower())
+            namesWithEmails.append(wordsInName[j-1].lower())
         if j<len(wordsInName)-1:
           if firstLetter == wordsInName[j+1][0]:
-            print(nameLast, " ", wordsInName[j+1], " ", dicts['email'], dicts['info'])
+            # print(nameLast, " ", wordsInName[j+1], " ", dicts['email'], dicts['info'])
+            namesWithEmails.append(nameLast.lower())
+            namesWithEmails.append(wordsInName[j+1].lower())
 
       if nameFirst == wordsInName[j]:
         if j>=1:
           if lastLetter == wordsInName[j-1][0]:
-            print(nameFirst, " ", wordsInName[j-1], " ", dicts['email'], dicts['info'])
+            # print(nameFirst, " ", wordsInName[j-1], " ", dicts['email'], dicts['info'])
+            namesWithEmails.append(nameFirst.lower())
+            namesWithEmails.append(wordsInName[j-1].lower())
         if j<len(wordsInName)-1:
           if lastLetter == wordsInName[j+1][0]:
-            print(nameFirst, " ", wordsInName[j+1], " ", dicts['email'], dicts['info'])
+            # print(nameFirst, " ", wordsInName[j+1], " ", dicts['email'], dicts['info'])
+            namesWithEmails.append(nameFirst.lower())
+            namesWithEmails.append(wordsInName[j+1].lower())
   return clean_list
 
 
@@ -114,20 +124,41 @@ def nameInEmailSingleCharAndName(dict_list):
 
 
 
-  
+
 
 	
 def main():
 	CSVDict = CSVReader('heads.csv')
 	print(len(CSVDict))
 	
-	# CSVDict = noEmails(CSVDict)
-	# print(len(CSVDict))
+	CSVDict = noEmails(CSVDict)
+	print(len(CSVDict))
 	
 	# CSVDict = keywordMatcher(CSVDict, ['Chair'])
 	# print(len(CSVDict))
-
 	CSVDict = removeDuplicates(CSVDict)
-	print(CSVDict)
+	# print(CSVDict)
+
+	# nameInEmailWithSplitChar(CSVDict, ".")
+	# nameInEmailWithSplitChar(CSVDict, "-")
+	# nameInEmailWithSplitChar(CSVDict, "_")
+	nameInEmailSingleCharAndName(CSVDict)
+
+	array = []
+	with open("names.txt", "r") as ins:
+		for line in ins:
+			array.append(line.lower())
+	for i in range(len(array)):
+		array[i] = array[i].strip('\n')
+
+
+	for i in range(len(namesWithEmails)):
+		validName = False
+		for j in range(len(array)):
+			if namesWithEmails[i]==array[j]:
+				validName = True
+		if validName == False:
+			print(namesWithEmails[i])
+
 
 main()
