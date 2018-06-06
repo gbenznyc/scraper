@@ -24,19 +24,31 @@ def CSVReader(path):
 	return dict_list
 
 def removeDuplicates(dict_list):
-	clean_list = list(set(dict_list))
-	print(clean_list)
+	clean_list = []
+	info_list = []
+	for dicts in dict_list:
+		info_list.append(dicts['info'])
+	info_list = list(set(info_list))
+	#print(len(info_list))
+	for infos in info_list:
+		for dicts in dict_list:
+			if infos == dicts['info']:
+				clean_list.append(dicts)
+				break
+	return clean_list
+
 	
 def main():
 	CSVDict = CSVReader('heads.csv')
 	print(len(CSVDict))
 	
-	CSVDict = noEmails(CSVDict)
-	print(len(CSVDict))
+	# CSVDict = noEmails(CSVDict)
+	# print(len(CSVDict))
 	
-	CSVDict = keywordMatcher(CSVDict, ['Chair'])
-	print(len(CSVDict))
+	# CSVDict = keywordMatcher(CSVDict, ['Chair'])
+	# print(len(CSVDict))
 
-	#print(CSVDict)
+	CSVDict = removeDuplicates(CSVDict)
+	print(CSVDict)
 
 main()
