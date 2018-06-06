@@ -69,7 +69,7 @@ def nameInEmailWithSplitChar(dict_list, splitChar):
             j =len(wordsInName)+10
       if nameCount >= len(name):
         clean_list.append(dicts)
-        print(name, " ", dicts['email'])
+        # print(name, " ", dicts['email'])
         namesWithEmails.append(name)
   return clean_list
 
@@ -119,7 +119,66 @@ def nameInEmailSingleCharAndName(dict_list):
 
 
 
+def splitNameFinder(dict_list):
+  nameCountNumber=0
+  clean_list = []
+  # splitChar = "."
+  for dicts in dict_list:
+    #print(dicts)
+    name = dicts['email'].split("@")[0]
+    name=name.translate(str.maketrans(dict.fromkeys('0123456789.-_+,')))#removes all numbers
+    name=name.lower()
 
+
+
+    wordsInName = dicts['info'].lower().split()
+
+    for i in range(len(name)):
+      splitName1=name[0:i+1]
+      splitName2=name[i+1:len(name)]
+      # print(splitName1, " ", splitName2)
+      testName = ""
+      for i in range(len(wordsInName)):
+        if(splitName1==wordsInName[i]):
+          if checkValidName(splitName1)==True:
+            sideName = getSideName(wordsInName, splitName1, splitName2)
+            if len(sideName)>0:
+               if checkValidName(sideName)==True:
+                 nameCountNumber = nameCountNumber+1
+                #  print(splitName1, " ", sideName, " ", dicts['email'])
+        if(splitName2==wordsInName[i]):
+          if checkValidName(splitName2)==True:
+            sideName = getSideName(wordsInName, splitName2, splitName1)
+            if len(sideName)>0:
+               if checkValidName(sideName)==True:
+                 nameCountNumber = nameCountNumber+1
+                #  print(splitName2, " ", sideName, " ", dicts['email'])
+# startswith for main name
+  return nameCountNumber
+    
+    
+
+
+def checkValidName(theName):
+  validName = False
+  for p in range(len(array)):
+    if theName==array[p]:
+      validName = True
+  if validName == True:
+    # print(theName)
+    return True
+  return False
+
+def getSideName(wordsInName,  name, sideName):
+  for j in range(len(wordsInName)):
+    if name == wordsInName[j]:
+          if j>=1:
+            if wordsInName[j-1].startswith(sideName):
+              return wordsInName[j-1]
+          if j<len(wordsInName)-1:
+            if wordsInName[j+1].startswith(sideName):
+              return wordsInName[j-1]
+  return ""
 
 
 
@@ -129,36 +188,43 @@ def nameInEmailSingleCharAndName(dict_list):
 	
 def main():
 	CSVDict = CSVReader('heads.csv')
-	print(len(CSVDict))
+	# print(len(CSVDict))
 	
 	CSVDict = noEmails(CSVDict)
-	print(len(CSVDict))
+	# print(len(CSVDict))
 	
 	# CSVDict = keywordMatcher(CSVDict, ['Chair'])
 	# print(len(CSVDict))
 	CSVDict = removeDuplicates(CSVDict)
-	# print(CSVDict)
+	print(len(CSVDict))
 
 	# nameInEmailWithSplitChar(CSVDict, ".")
-	# nameInEmailWithSplitChar(CSVDict, "-")
+	# nameInEmailWithSplitChar(CSVDict, print"-")
 	# nameInEmailWithSplitChar(CSVDict, "_")
-	nameInEmailSingleCharAndName(CSVDict)
+	# nameInEmailSingleCharAndName(CSVDict)
 
-	array = []
-	with open("names.txt", "r") as ins:
-		for line in ins:
-			array.append(line.lower())
-	for i in range(len(array)):
-		array[i] = array[i].strip('\n')
+	
 
 
-	for i in range(len(namesWithEmails)):
-		validName = False
-		for j in range(len(array)):
-			if namesWithEmails[i]==array[j]:
-				validName = True
-		if validName == False:
-			print(namesWithEmails[i])
+	# for i in range(len(namesWithEmails)):
+	# 	validName = False
+	# 	for j in range(len(array)):
+	# 		if namesWithEmails[i]==array[j]:
+	# 			validName = True
+	# 	if validName == True:
+	# 		print(namesWithEmails[i])
+	print(splitNameFinder(CSVDict))
+	
 
+
+array = []
+with open("names.txt", "r") as ins:
+  for line in ins:
+    array.append(line.lower())
+for i in range(len(array)):
+  array[i] = array[i].strip('\n')
 
 main()
+
+
+
