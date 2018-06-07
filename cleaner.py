@@ -192,6 +192,10 @@ def splitNameFinderStartsWith(dict_list):
 # startswith for main name
 # single names dont work
 # if email is in info it dupilcates
+#needs to remove slashes
+# solar   uc   rwinston@ucmerced.edu
+# ruh   adam   aruh@vwu.edu
+# english   in   aruh@vwu.edu
   return nameCountNumber
     
     
